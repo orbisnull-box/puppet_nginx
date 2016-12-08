@@ -1,0 +1,36 @@
+server {
+    listen <%= @port %>;
+
+    root <%= @path %>;
+
+    index index.php index.html;
+
+    server_name <%= @hostname %>;
+
+    set $path_info $fastcgi_path_info;
+    fastcgi_param PATH_INFO $path_info;
+
+    location / {
+    	index index.php index.html;
+        try_files $uri $uri/ @php;
+    }
+
+    location ^~ /\. {
+        deny all;
+    }
+
+    #
+    location ~ \.php$ {
+	 try_files $fastcgi_script_name =404;
+        fastcgi_pass php-www;
+        include fastcgi_params;
+    }
+
+    location @php {
+        fastcgi_pass   php-www;
+        include fastcgi_params;
+        fastcgi_param  SCRIPT_FILENAME  <%= @path %>/index.php;
+        fastcgi_param  SCRIPT_NAME      index.php;
+    }
+
+}

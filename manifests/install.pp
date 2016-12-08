@@ -5,7 +5,7 @@ class orbisnull_nginx::install inherits orbisnull_nginx {
       ensure    => $ensure,
       name      => $package,
       require => Class['orbisnull_nginx::repository'],
-      #notify => Class['orbisnull_puppet::client::config'],
+      notify => Class['orbisnull_nginx::config'],
     }
 
 }
